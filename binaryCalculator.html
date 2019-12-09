@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Binary Calculator</title>
+    <style type="text/css">
+        body {
+            width: 33%;
+        }
+
+        #res {
+            background-color: lightgray;
+            border: 1px solid;
+            height: 48px;
+            font-size: 20px;
+        }
+
+        #btn0,
+        #btn1 {
+            background-color: lightgreen;
+            color: brown;
+        }
+
+        #btnClr,
+        #btnEql {
+            background-color: darkgreen;
+            color: white;
+        }
+
+        #btnSum,
+        #btnSub,
+        #btnMul,
+        #btnDiv {
+            background-color: black;
+            color: red;
+        }
+
+        #btnSum,
+        #btnSub,
+        #btnMul,
+        #btnDiv,
+        #btn0,
+        #btn1,
+        #btnClr,
+        #btnEql {
+            width: 25%;
+            height: 36px;
+            font-size: 18px;
+            margin: 0px;
+            float: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <input type='text' id="res" />
+        <div id="btns">
+            <div>
+                <button id="btn0" onclick="entry('0')">0</button>
+                <button id="btn1" onclick="entry('1')">1</button>
+                <button id="btnClr" onclick="clearInput()">C</button>
+
+                <button id="btnEql" onclick="submit()"> = </button>
+            </div>
+
+            <div>
+                <button id="btnSum" onclick="entry('+')">+</button>
+                <button id="btnSub" onclick="entry('-')">-</button>
+                <button id="btnMul" onclick="entry('*')">*</button>
+                <button id="btnDiv" onclick="entry('/')">/</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function entry(str) {
+            let val = document.getElementById('res').value;
+            let allowed = ['+', '-', '*', '/', '1', '0'];
+            let operator = ['+', '-', '*', '/'];
+            let isValid = allowed.includes(str) ? true : false;
+            if (isValid) {
+                let inputValue = document.getElementById('res').value;
+                document.getElementById('res').value = inputValue + str;
+                let exactEntry = document.getElementById('res').value;
+
+                if (operator.includes(str)) {
+                    let newInput = exactEntry.split('');
+                    let len = newInput.length;
+                    if (operator.includes(newInput[0])) {
+                        document.getElementById('res').value = "";
+                    } else if (len > 2) {
+                        if (operator.includes(newInput[len - 2])) {
+                            let slicedInput = newInput.pop();
+                            let anotherSlice = newInput.pop();
+                            let exactArray = newInput.push(slicedInput);
+                            document.getElementById('res').value = newInput.join('');
+                        }
+                    }
+                } else {
+                    document.getElementById('res').value = val + str;
+                }
+            } else {
+                document.getElementById('res').value = val;
+            }
+            focus();
+        }
+
+        document.addEventListener("input", function (e) {
+                let val = document.getElementById('res').value;
+                let allowed = ['+', '-', '*', '/'];
+                console.log(val);
+                     // change name of arrOfVal and assign some meaning full name
+                let input_arr = val.split('');
+                if (allowed.includes(input_arr[0])) {
+                    document.getElementById('res').value = "";
+                } else if (input_arr.length > 2) {
+                    // change name of allValue and assign some meaning full name
+                    let input_allvalue_arr = document.getElementById('res').value;
+                    // change name of makeArray and assign some meaning full name
+                    let input_create_arr = input_allvalue_arr.split('');
+                    if (allowed.includes(input_create_arr[input_create_arr.length - 2]) && allowed.includes(input_create_arr[input_create_arr.length - 1])) {
+                        input_create_arr.splice(input_create_arr.length - 2, 1);
+                        let actualInput = input_create_arr.join('');
+                        document.getElementById('res').value = actualInput;
+                    }
+              }
+        });
+
+        document.addEventListener("keyup", function (e) {
+            let keyBoard = e.key;
+            let keyType = e.code;
+            let val = document.getElementById('res').value;
+            let allowed = ['+', '-', '*', '/', '1', '0', 'Enter'];
+
+            if (allowed.includes(keyBoard)) {
+                if (keyBoard === "Enter") {
+                    if (val.length) {
+                        try {
+                            submit();
+                        } catch (error) {
+                            alert('Invalid Expression');
+                        }
+                    }
+                } else {
+                    focus();
+                }
+            } else {
+                focus();
+                let arrOfInput = val.split('');
+                if (!allowed.includes(arrOfInput[arrOfInput.length - 1])) {
+                    arrOfInput.pop();
+                }
+                document.getElementById('res').value = arrOfInput.join('');
+            }
+        });
+
+        function focus() {
+            document.getElementById('res').focus();
+        }
+
+        function clearInput() {
+            document.getElementById('res').value = '';
+        }
+
+        // Merge the entru `=` and submit function in same.
+
+        function submit() {
+            let val = document.getElementById('res').value;
+            let arr = val.split('');
+            let allowed = ['+', '-', '*', '/'];
+            let operatorArr = [], binaryArr = [], i = 0, storedBinary = "";
+            for (i = 0; i < arr.length; i++) {
+                if (i !== arr.length - 1) {
+                    if (allowed.includes(arr[i])) {
+                        operatorArr.push(arr[i]);
+                        binaryArr.push(parseInt(storedBinary, 2));
+                        storedBinary = '';
+                    } else {
+                        storedBinary = storedBinary.concat(arr[i]);
+                    }
+                } else {
+                    storedBinary = storedBinary.concat(arr[i]);
+                    binaryArr.push(parseInt(storedBinary, 2));
+                }
+            }
+            console.log(operatorArr + "\n" + binaryArr);
+            let evalableArr = [];
+            for (let x = 0; x < binaryArr.length; x++) {
+                evalableArr.push(binaryArr[x]);
+                evalableArr.push(operatorArr[x]);
+            }
+            let evaluation = eval(evalableArr.join(''));
+            document.getElementById('res').value = parseFloat(evaluation).toString(2);
+        }
+    </script>
+</body>
+
+</html>

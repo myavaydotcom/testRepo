@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<script>
+    var globalDigit = 0;
+</script>
+
+<body>
+    <div>
+        <span id="container">
+            <div class="row">
+                <button id="a1"></button>
+                <button id="a2"></button>
+                <button id="a3"></button>
+            </div>
+            <div class="row">
+                <button id="a4"></button>
+                <button id="a5"></button>
+                <button id="a6"></button>
+            </div>
+            <div class="row">
+                <button id="a7"></button>
+                <button id="a8"></button>
+                <button id="a9"></button>
+            </div>
+        </span>
+
+        <input type="text" id="numberOfElements" value="">
+        
+        <div id="for-new-element"></div>
+
+        <div class="control-button">
+            <button onClick={rotate(true)}>Enter</button>
+            <button onClick={rotate(false)}>Cancel</button>
+            <button onClick={toggle()}>Show/Hide</button>
+            <button onClick={addElement()}>Add Element</button>
+            <button onClick={removeElement()}>Remove Element</button>
+            <button onClick={massAddition()}>Add (N) Elements</button>
+            <button onClick={massRemoval()}>Remove (N) Elements(If exists)</button>
+        </div>
+    </div>
+</body>
+<script>
+    function rotate(val) {
+        let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9], i = 0;
+        let len = arr.length;
+
+        if (val) {
+            for (i = 0; i < len; i++) {
+                let id = `a${i + 1}`;
+
+                // some logic
+                switch (i) {
+                    case 0:
+                        {
+                            document.getElementById(id).innerHTML = arr[3];
+                            break;
+                        }
+                    case 1:
+                        {
+                            document.getElementById(id).innerHTML = arr[0];
+                            break;
+                        }
+                    case 2:
+                        {
+                            document.getElementById(id).innerHTML = arr[1];
+                            break;
+                        }
+                    case 3:
+                        {
+                            document.getElementById(id).innerHTML = arr[6];
+                            break;
+                        }
+                    case 4:
+                        {
+                            document.getElementById(id).innerHTML = arr[4];
+                            break;
+                        }
+                    case 5:
+                        {
+                            document.getElementById(id).innerHTML = arr[2];
+                            break;
+                        }
+                    case 6:
+                        {
+                            document.getElementById(id).innerHTML = arr[7];
+                            break;
+                        }
+                    case 7:
+                        {
+                            document.getElementById(id).innerHTML = arr[8];
+                            break;
+                        }
+                    case 8:
+                        {
+                            document.getElementById(id).innerHTML = arr[5];
+                            break;
+                        }
+                    default:
+                        {
+                            alert('something went wrong :-(');
+                            break;
+                        }
+                }
+
+            }
+
+        } else {
+            for (i = 0; i < len; i++) {
+                let id = `a${i + 1}`;
+                document.getElementById(id).innerHTML = `${i + 1}`;
+
+            }
+        }
+
+
+    }
+
+    function reset() {
+        let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9], i = 0;
+        let len = arr.length;
+
+        for (i = 0; i < len; i++) {
+            let id = `a${i + 1}`;
+            document.getElementById(id).innerHTML = `${i + 1}`;
+
+        }
+    }
+
+    function toggle() {
+        let x = document.getElementById("container");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+
+    function addElement() {
+        let para = document.createElement("p");
+        let node = document.createTextNode(`${new Date()}`);
+        para.appendChild(node);
+        let element = document.getElementById("for-new-element");
+        element.appendChild(para);
+    }
+
+    function removeElement() {
+        let id = document.getElementById("for-new-element");
+
+        if (id.hasChildNodes()) {
+            id.removeChild(id.childNodes[0]);
+        }
+    }
+
+   // function for addition 
+    function addNelement(n) {
+        for (let i = 0; i < n; i++) {
+            let para = document.createElement("p");
+            let node = document.createTextNode(`${new Date()}`);
+            para.appendChild(node);
+            let element = document.getElementById("for-new-element");
+            element.appendChild(para);
+        }
+    }
+
+    function massAddition() {
+        let value = document.getElementById('numberOfElements').value;
+        value = parseFloat(value);
+        if (!isNaN(value)) {
+            addNelement(value)
+        } else {
+            alert('Please enter only digits')
+        }
+    }
+    // end of addition function .....
+
+    // function for removal
+       function removeNelement(m){
+           for(let i = 0; i < m;i ++){
+            let id = document.getElementById("for-new-element");
+
+                if (id.hasChildNodes()) {
+                   id.removeChild(id.childNodes[0]);
+                }
+           }
+       }
+
+        function massRemoval(){
+            let value = document.getElementById('numberOfElements').value;
+                value = parseFloat(value);
+            if (!isNaN(value)) {
+                removeNelement(value);
+             } else {
+              alert('Please enter only digits')
+            }
+        }
+    // end of removal function def
+
+    reset();
+
+</script>
+
+</html>

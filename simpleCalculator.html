@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+</head>
+
+<body>
+    <div>
+        <div class="input-screen">
+            <input type="search" id="tex" onclick="submit()" onblur="textFocus()" autofocus />
+        </div>
+        <div class="calculator-button">
+            <div class="row">
+                <div>
+                    <button onclick='entry("1")'>1</button>
+                    <button onclick='entry("2")'>2</button>
+                    <button onclick='entry("3")'>3</button>
+                    <button onclick='entry("*")'>x</button>
+
+                    <button onclick='entry("sin")'>sin</button>
+                </div>
+                <div>
+                    <button onclick='entry("4")'>4</button>
+                    <button onclick='entry("5")'>5</button>
+                    <button onclick='entry("6")'>6</button>
+                    <button onclick='entry("/")'>/</button>
+
+                    <button onclick='entry("cos")'>cos</button>
+                </div>
+                <div>
+                    <button onclick='entry("7")'>7</button>
+                    <button onclick='entry("8")'>8</button>
+                    <button onclick='entry("9")'>9</button>
+
+                    <button onclick='entry("tan")'>tan</button>
+                    <input type="button" onclick="submit(true)" value="=" />
+
+                </div>
+            </div>
+            <div>
+                <button onclick='entry("0")'>0</button>
+                <button onclick='entry("+")'>+</button>
+                <button onclick='entry("-")'>-</button>
+                <button onclick='entry("sqrt")'>sqrt</button>
+
+                <button onclick='clearInput()'>c</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script> 
+        document.addEventListener("keyup", function (e) {
+                let keyBoard = e.key;
+                let keyType = e.code;
+                if (keyBoard === "Enter") {
+                    let val = document.getElementById('tex').value;
+                    if (val.length) {
+                        try {
+                            afterEnter(val);
+                        } catch (error) {
+                            alert('Invalid Expression');
+                        }
+                    }
+                } else {
+                    document.getElementById('tex').focus();
+                }
+            });
+
+        function entry(str) {
+            let scientificKeys = ['sin', 'cos', 'tan', 'sqrt'];
+            let inputValue = document.getElementById('tex').value;
+            let allowed = ['+', '-', '/', '*'];
+            document.getElementById('tex').value = inputValue + str;
+            let exactEntry = document.getElementById('tex').value;
+
+            if (allowed.includes(str)) {
+                let newInput = exactEntry.split('');
+                let len = newInput.length;
+                if (allowed.includes(newInput[0])) {
+                    newInput.shift();
+                    document.getElementById('tex').value = newInput.join('');
+                } else if (len > 2) {
+                    if (allowed.includes(newInput[len - 2])) {
+                        let slicedInput = newInput.pop();
+                        console.log("slicedInput ", slicedInput);
+                        let anotherSlice = newInput.pop();
+                        let exactArray = newInput.push(slicedInput);
+                        document.getElementById('tex').value = newInput.join('');
+                        console.log(newInput);
+                    }
+                }
+            } else if (scientificKeys.includes(str)) {
+                if (inputValue.match(/[0-9]/)) {
+                    let arr = inputValue.split(''), i = 0;
+                    let len = arr.length;
+                    for (i = len - 1; i > -1; i--) {
+                        if (allowed.includes(arr[i])) {
+                            break;
+                        }
+                    }
+                    let arrAction = arr.splice(i);
+                    let lastOprand = arrAction.shift();
+                    if (arrAction.length) {
+                        let exactValue = `${arr.join('')}${lastOprand}${str}(${arrAction.join('')})`;
+                        document.getElementById('tex').value = exactValue;
+                    } else {
+                        if (allowed.includes(lastOprand)) {
+                            document.getElementById('tex').value = `${inputValue}`;
+                        } else {
+                            document.getElementById('tex').value = `${str}(${inputValue})`;
+                        }
+                    }
+                } else {
+                    document.getElementById('tex').value = inputValue;
+                }
+            }
+        }
+
+        function submit(event) {
+            if (event) {
+                let val = document.getElementById('tex').value;
+                if (val.length) {
+                    try {
+                        afterEnter(val);
+                    } catch (error) {
+                        alert('Invalid Expression');
+                    }
+                } else {
+                    alert('atleat enter any digit');
+                    document.getElementById('tex').value = '';
+                }
+            }
+        }
+
+        function clearInput() {
+            document.getElementById('tex').value = '';
+        }
+
+        function textFocus() {
+            document.getElementById('tex').focus();
+        }
+
+        function afterEnter(val) {
+            let modifyValue = val.toString().replace(/sin/g, 'Math.sin').replace(/cos/g, 'Math.cos').replace(/tan/g, 'Math.tan').replace(/sqrt/g, 'Math.sqrt');
+            const result = eval(modifyValue);
+            console.log(result);
+            document.getElementById('tex').value = result;
+        }
+    </script>
+</body>
+
+</html>
